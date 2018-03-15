@@ -10,7 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class Crawer_GYSRMZF
+public class Crawer_GYSRMZF_NEW
 {
   public static void main(String[] args)
     throws IOException

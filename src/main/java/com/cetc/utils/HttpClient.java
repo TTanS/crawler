@@ -12,10 +12,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.Cookie;
 
 public class HttpClient
 {
@@ -162,6 +164,72 @@ public class HttpClient
     }
     return true;
   }
+  public static boolean download(String urlStr, String fileName, String savePath ,List<Cookie> cookies)
+		    throws IOException
+		  {
+		    URL url = null;
+		    try
+		    {
+		      url = new URL(urlStr);
+		    }
+		    catch (Exception e)
+		    {
+		      e.printStackTrace();
+		    }
+		    if ((url == null) || (url.equals(""))) {
+		      return false;
+		    }
+		    HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+		    
+		    conn.setConnectTimeout(10000);
+		    
+		    conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+		    // 添加cookie
+		    
+		    String cookie = "";
+		    if(cookies != null ){
+		    	for (int i = 0; i < cookies.size(); i++) {
+		    		cookie = cookie + (cookies.get(i).getName() + "=" + cookies.get(i).getValue() + ";") ;
+		    	}
+		    }
+		    conn.setRequestProperty("Cookie",cookie);
+		    
+		    InputStream inputStream = null;
+		    try
+		    {
+		      inputStream = conn.getInputStream();
+		    }
+		    catch (Exception e)
+		    {
+		      e.printStackTrace();
+		    }
+		    if ((inputStream == null) || (inputStream.equals(""))) {
+		      return false;
+		    }
+		    byte[] getData = readInputStream(inputStream);
+		    
+
+		    File saveDir = new File(savePath);
+		    if (!saveDir.exists()) {
+		      saveDir.mkdir();
+		    }
+		    File file = new File(saveDir + File.separator + fileName);
+		    if (!file.getParentFile().exists()) {
+		      if (!file.getParentFile().mkdirs()) {
+		        return false;
+		      }
+		    }
+		    FileOutputStream fos = new FileOutputStream(file);
+		    fos.write(getData);
+		    if (fos != null) {
+		      fos.close();
+		    }
+		    if (inputStream != null) {
+		      inputStream.close();
+		    }
+		    return true;
+		  }
+  
   
   public static byte[] readInputStream(InputStream inputStream)
     throws IOException
