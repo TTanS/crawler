@@ -24,13 +24,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /***
- * 贵阳市人民政府部门公告
+ * 贵阳市人民政府区市县公告
  * 
  * @author TS
  * 
  */
 
-public class Crawer_GYSRMZF_NEW {
+public class Crawer_GYSRMZF_NEW2 {
 	public static void main(String[] args) throws IOException, ParseException {
 		String host = "http://www.gygov.gov.cn/";
 		// String homePageHrl = "http://www.gygov.gov.cn/c80/index.html";
@@ -53,8 +53,8 @@ public class Crawer_GYSRMZF_NEW {
 		// Document homePage = HttpClient.getHtmlDocument(homeUrl);
 		GyBmggListService bmggListService = new GyBmggListServiceImpl();
 
-		for (int currentPage = 154; currentPage <= 213; currentPage++) {
-			String dataListUrl = "http://www.gygov.gov.cn/gygov//openapi/info/ajaxpagelist.do?pagesize=22&channelid=79&pageno="
+		for (int currentPage = 1; currentPage <= 10; currentPage++) {
+			String dataListUrl = "http://www.gygov.gov.cn/gygov//openapi/info/ajaxpagelist.do?pagesize=22&channelid=80&pageno="
 					+ currentPage;
 			Document homePage = HttpClient.getHtmlDocument(dataListUrl);
 			String dataList = homePage.body().text();
@@ -96,7 +96,7 @@ public class Crawer_GYSRMZF_NEW {
 				bmggList.setUrl(url);
 				bmggList.setUsername(username);
 				// 将目录插入数据库
-				bmggListService.insertSelective(bmggList);
+//				bmggListService.insertSelective(bmggList);
 				// 进如文件详情页
 				Document dataPage = HttpClient.getHtmlDocument(url);
 				Element dataTable = null;
@@ -115,7 +115,7 @@ public class Crawer_GYSRMZF_NEW {
 					for (int j = 0; j < aDownloadFile.size(); j++) {
 						String downloadHref = ((Element) aDownloadFile.get(j)).attr("href");
 						if (downloadHref.length() >= 27) {
-							String downloadSavePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/部门公告/" + title
+							String downloadSavePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/区市县公告/" + title
 									+ ((Element) aDownloadFile.get(j)).attr("title") + "/";
 							String downloadUrl = "";
 							if (downloadHref.substring(0, 4).equals("http")) {
@@ -152,7 +152,7 @@ public class Crawer_GYSRMZF_NEW {
 					// 下载图片
 					Elements img = dataDiv.getElementsByTag("img");
 					if (img.size() != 0) {
-						String downloadSavePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/部门公告/" + title + "/";
+						String downloadSavePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/区市县公告/" + title + "/";
 						for (int j = 0; j < img.size(); j++) {
 							String downloadImgSrc = ((Element) img.get(j)).attr("src");
 							String downloadImgUrl = host + downloadImgSrc;
@@ -176,7 +176,7 @@ public class Crawer_GYSRMZF_NEW {
 					}
 				}
 				String saveName = title + ".doc";
-				String savePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/部门公告/";
+				String savePath = "D:/crawler/贵阳市人民政府/" + TimeUtils.getTime() + "/区市县公告/";
 				String e2 = "<table></table>";
 				try {
 					ExcelUtils.writeWordFile(savePath, saveName, e2 + dataDiv.toString());
